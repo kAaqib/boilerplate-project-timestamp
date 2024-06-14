@@ -33,14 +33,12 @@ app.get("/api/:date?", function(req, res) {
   if (new Date(input) != "Invalid Date") {
     console.log("ddisp");
     ddisp(input, months, days, req, res);
-  // } else if (Date(input * 1000) != 'Invalid Date') {
-    // let unix = input;
-    // let ud = new Date(unix * 1000);
-    // let utcString = ud.toUTCString();
-    // res.json({unix: `${unix}`, utc: `${utcString}`});
-  } else {
+  } else if (new Date(input * 1000) != "Invalid Date") {
     console.log("udisp");
     udisp(input, months, days, req, res);
+  } else {
+    console.log("error");
+    res.json({error: `Invalid Date`});
   }
 });
 function ddisp(input, months, days, req, res) {
@@ -57,8 +55,10 @@ function ddisp(input, months, days, req, res) {
 }
 
 function udisp(input, months, days, req, res) {
-  let unix = input;
-  let ud = new Date(unix * 1000);
+  const unix = input;
+  console.log(unix);
+  let ud = new Date(unix * 1);
+  console.log(ud.toISOString());
   let utcString = ud.toUTCString();
   console.log(utcString);
   res.json({unix: `${unix}`, utc: `${utcString}`});
