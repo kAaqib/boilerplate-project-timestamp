@@ -30,10 +30,14 @@ app.get("/api/:date?", function(req, res) {
   const input = req.params.date;
   console.log(input);
   console.log(new Date(input));
+  if(input === '' || input === undefined) {
+    let d = new Date();
+    return res.json({unix: d.getTime(), utc: d.toUTCString()})
+  }
   if (new Date(input) != "Invalid Date") {
     console.log("ddisp");
     ddisp(input, months, days, req, res);
-  } else if (new Date(input * 1000) != "Invalid Date") {
+  } else if (new Date(input * 1) != "Invalid Date") {
     console.log("udisp");
     udisp(input, months, days, req, res);
   } else {
@@ -43,7 +47,6 @@ app.get("/api/:date?", function(req, res) {
 });
 function ddisp(input, months, days, req, res) {
   const d = new Date(input);
-  const unix = d.getTime();
   var day = days[d.getDay()];
   var date = d.getDate();
   var month = months[d.getMonth()];
@@ -51,17 +54,14 @@ function ddisp(input, months, days, req, res) {
   var hours = d.getUTCHours();
   var minutes = d.getUTCMinutes();
   var seconds = d.getUTCSeconds();
-  res.json({unix: `${unix}`, utc: `${day}${date} ${month} ${year} 00:00:00 GMT`});
+  res.json({unix: d.getTime(), utc: `${day}${date} ${month} ${year} 00:00:00 GMT`});
 }
 
 function udisp(input, months, days, req, res) {
-  const unix = input;
-  console.log(unix);
+  let unix = input;
   let ud = new Date(unix * 1);
-  console.log(ud.toISOString());
   let utcString = ud.toUTCString();
-  console.log(utcString);
-  res.json({unix: `${unix}`, utc: `${utcString}`});
+  res.json({unix: ud.getTime(), utc: `${utcString}`});
 }
 
 // Listen on port set in environment variable or default to 3000
